@@ -1,0 +1,9 @@
+google-genai
+pandas
+duckdb
+pydantic
+ipython
+pytest
+python-dotenv
+pyarrow
+matplotlib

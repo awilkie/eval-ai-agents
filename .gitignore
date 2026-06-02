@@ -1,0 +1,9 @@
+# Environments
+.env
+venv/
+__pycache__/
+
+# Generated outputs & Data
+*.png
+*.pdf
+data/*.parquet
