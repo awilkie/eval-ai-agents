@@ -350,7 +350,83 @@ def export_trace_to_png():
     except Exception as e:
         print(f"Failed to export trace to PNG: {e}")
 
+def export_trace_to_ascii():
+    print("Exporting traces to ASCII...")
+    import datetime
+    
+    try:
+        df = None
+        # Try newer API first
+        try:
+            from phoenix.client import Client
+            phoenix_client = Client(base_url=phoenix_endpoint)
+            df = phoenix_client.spans.get_spans_dataframe(project_identifier=PROJECT_NAME)
+        except Exception:
+            # Fallback for older Phoenix API or if Client import fails
+            import phoenix as px
+            df = px.active_session().get_spans_dataframe()
+
+        if df is None or df.empty:
+            print("No traces found to export to ASCII.")
+            return
+
+        # Sort spans by start_time to assign sequence numbers
+        df = df.sort_values(by='start_time')
+        
+        # Build mapping from span_id to sequence number
+        seq_map = {}
+        for i, idx in enumerate(df.index):
+            seq_map[idx] = i + 1
+
+        # Build adjacency list
+        children_map = {}
+        roots = []
+        for index, row in df.iterrows():
+            parent_id = row.get('parent_id')
+            if pd.isna(parent_id) or parent_id == '' or parent_id not in df.index:
+                roots.append(index)
+            else:
+                if parent_id not in children_map:
+                    children_map[parent_id] = []
+                children_map[parent_id].append(index)
+
+        # Helper to recursively build tree string
+        lines = []
+        def build_tree(node_id, prefix="", is_last=True, is_root=False):
+            row = df.loc[node_id]
+            seq = seq_map[node_id]
+            name = row.get('name', 'Unknown')
+            kind = row.get('span_kind', '')
+            
+            if is_root:
+                lines.append(f"[{seq}] {name} ({kind})")
+                next_prefix = ""
+            else:
+                branch = "└── " if is_last else "├── "
+                lines.append(f"{prefix}{branch}[{seq}] {name} ({kind})")
+                next_prefix = prefix + ("    " if is_last else "│   ")
+                
+            children = children_map.get(node_id, [])
+            for i, child_id in enumerate(children):
+                build_tree(child_id, next_prefix, i == (len(children) - 1), False)
+
+        for root in roots:
+            build_tree(root, is_root=True)
+
+        # Write to file
+        timestamp = datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+        filename = f"trace_visualization_ascii_{timestamp}.txt"
+        
+        with open(filename, "w") as f:
+            f.write("\n".join(lines))
+            
+        print(f"ASCII trace successfully exported to {filename}")
+
+    except Exception as e:
+        print(f"Failed to export trace to ASCII: {e}")
+
 if __name__ == "__main__":
     result = start_main_span("Which stores did the best in 2021?")
     print(phoenix_endpoint)
     export_trace_to_png()
+    export_trace_to_ascii()

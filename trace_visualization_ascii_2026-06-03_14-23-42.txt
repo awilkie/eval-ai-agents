@@ -1,0 +1,54 @@
+[1] ┌───────────┐
+    │ AgentRun  │ (agent)
+    └─────┬─────┘
+          │
+          ├─► [2] ┌─────────────┐
+          │       │ router_call │ (chain) - The agent plans its first move
+          │       └──────┬──────┘
+          │              ├─► [3] ┌────────────┐
+          │              │       │ router_llm │ (llm) - Gemini decides it must use `lookup_sales_data`
+          │              │       └────────────┘
+          │              └─► [4] ┌───────────────────┐
+          │                      │ handle_tool_calls │ (chain) - The agent executes the requested tool
+          │                      └────────┬──────────┘
+          │                               └─► [5] ┌───────────────────┐
+          │                                       │ lookup_sales_data │ (tool)
+          │                                       └─────────┬─────────┘
+          │                                                 ├─► [6] ┌────────────────────────┐
+          │                                                 │       │ generate_sql_query_llm │ (llm)
+          │                                                 │       └────────────────────────┘
+          │                                                 └─► [7] ┌───────────────────┐
+          │                                                         │ execute_sql_query │ (chain) - DuckDB runs
+          │                                                         └───────────────────┘
+          │
+          ├─► [8] ┌─────────────┐
+          │       │ router_call │ (chain) - The agent feeds the SQL data back to the LLM
+          │       └──────┬──────┘
+          │              ├─► [9] ┌────────────┐
+          │              │       │ router_llm │ (llm) - Gemini decides it must use `generate_visualization`
+          │              │       └────────────┘
+          │              └─► [10] ┌───────────────────┐
+          │                       │ handle_tool_calls │ (chain)
+          │                       └────────┬──────────┘
+          │                                └─► [11] ┌────────────────────────┐
+          │                                         │ generate_visualization │ (tool)
+          │                                         └─────────┬──────────────┘
+          │                                                   ├─► [12] ┌──────────────────────┐
+          │                                                   │        │ extract_chart_config │ (chain)
+          │                                                   │        └─────────┬────────────┘
+          │                                                   │                  └─► [13] ┌──────────────────────────┐
+          │                                                   │                           │ extract_chart_config_llm │ (llm)
+          │                                                   │                           └──────────────────────────┘
+          │                                                   └─► [14] ┌──────────────┐
+          │                                                            │ create_chart │ (chain)
+          │                                                            └───────┬──────┘
+          │                                                                    └─► [15] ┌──────────────────┐
+          │                                                                             │ create_chart_llm │ (llm)
+          │                                                                             └──────────────────┘
+          │
+          └─► [16] ┌─────────────┐
+                   │ router_call │ (chain) - The agent evaluates if the task is complete
+                   └──────┬──────┘
+                          └─► [17] ┌────────────┐
+                                   │ router_llm │ (llm) - Gemini confirms task is done, gives final text answer
+                                   └────────────┘
