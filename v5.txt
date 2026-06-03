@@ -1,0 +1,190 @@
+0:00
+Now that you understand your agent example,
+0:02
+the next step is to add observability to your agent code.
+0:05
+This will give you insight into the trajectory or sequence of steps
+0:08
+your agent takes to respond to a user's query.
+0:11
+You'll learn how to instrument your agent,
+0:13
+which means adding code to track your agent steps,
+0:16
+and then visualize the collected information or traces in the Phoenix UI.
+0:20
+All right. Let's have some fun.
+0:22
+When it comes to observing your agent,
+0:24
+there are a few key concepts that are important to know.
+0:26
+The first is observability.
+0:28
+Observability is a general software concept
+0:31
+that refers to having complete visibility into every layer of your application.
+0:36
+In the context of LLM applications, that's often tracking things like the prompt,
+0:40
+the response, token usage, and then any calls
+0:43
+that happen around the calls that you're making to LLMs.
+0:46
+Observability is typically made up of traces and spans.
+0:50
+Traces refer to full run through of your application,
+0:53
+so a single trace would be one and end
+0:56
+run of your application from an input all the way through to an output.
+1:00
+And then traces are comprised of multiple spans.
+1:04
+Spans are individual steps of calls
+1:07
+to LLMs or code, or lookups to databases or whatever might be.
+1:11
+So one trace is made of multiple spans, and they're typically presented
+1:15
+in this hierarchical way where spans can be nested underneath each other
+1:18
+to show that they're operating within another span.
+1:21
+And then a set of spans will make up one trace hierarchy.
+1:25
+Spans are typically presented in this hierarchical manner here
+1:28
+where you have individual spans that are nested
+1:31
+within each other, all making up one trace.
+1:35
+And you might have spans for LLM calls as you see in the image here.
+1:38
+You might have spans for tools.
+1:40
+You might have chain spans
+1:41
+which are just general logic steps that happen within a trace.
+1:45
+Traces and spans come from a framework called OpenTelemetry.
+1:49
+OpenTelemetry is often abbreviated to OTEL,
+1:51
+and it's one of the most widely used standards for application
+1:54
+observability, even outside of LLMs and AI agents.
+1:58
+OTEL includes the idea of traces and spans that are captured within your
+2:01
+application, as well as some standards for how to capture those traces and spans.
+2:05
+Often this process
+2:06
+is referred to as instrumentation, which you'll learn more about in a second.
+2:10
+And then OpenTelemetry also includes the concept of collectors and processors
+2:14
+to receive those traces and spans, and then enumerate them in a platform
+2:19
+that allows you to visualize those traces and run later evaluation on them.
+2:23
+Throughout this course, you're going to use a tool
+2:25
+called Arize Phoenix, which serves as one of those collectors
+2:28
+to allow you to receive, visualize, and evaluate traces.
+2:32
+This is what a trace looks like in Phoenix.
+2:34
+You're going to see a lot more of this throughout the notebooks
+2:36
+as you start implementing some of these techniques.
+2:38
+But you'll notice there's one trace here of Agent Run
+2:41
+in the image that's made up of multiple spans.
+2:45
+You have an LLM span in orange.
+2:47
+You have your chain spans in blue.
+2:49
+And then your tool spans in yellow.
+2:52
+Traces and spans are captured in your application through a process
+2:55
+called instrumentation.
+2:56
+Instrumentation refers to the practice of marking which functions
+3:00
+or code blocks within your code
+3:02
+you want to track as spans and what attributes
+3:05
+you want to attach to those spans.
+3:07
+You can do this manually with clauses or decorators,
+3:10
+as you'll see in the next notebook as well.
+3:12
+However, tools like Phoenix do automate some of this process for you, especially
+3:16
+if you're using popular libraries like OpenAI or LlamaIndex or LangChain.
+3:22
+Observability is important for a few different reasons.
+3:25
+First, when you're getting off the ground and building your application,
+3:28
+observability really simplifies the debugging process.
+3:31
+As you're building.
+3:32
+It's much easier to debug by going through a nice visual trace
+3:35
+than it is to pore over print statements and logs in your application,
+3:40
+so it makes it easier to get going.
+3:42
+But then, as you start launching your application to multiple
+3:44
+different users, you start moving towards production or testing
+3:47
+even. Then, it gives you a detailed log of all of the calls made to
+3:51
+your application and all of the different inputs that you're receiving.
+3:55
+So it gives you a large database of information
+3:57
+of all of your different application runs, so you can monitor how it's performing.
+4:01
+And then these traces will become the bedrock that is used to run evaluation.
+4:06
+So later notebooks will have you export data from Phoenix that you can then use
+4:11
+for evaluations at scale across multiple runs of your application.
+4:15
+Finally, putting these together,
+4:17
+observability helps you really start to understand
+4:20
+and eventually control some of the more unpredictable behavior of LLMs.
+4:24
+LLMs are by their very nature, unpredictable in some cases,
+4:27
+and the best way to deal with
+4:28
+that is by monitoring them and later evaluating them within your application.
+4:33
+In this lesson, you've learned what observability is, how it works,
+4:36
+and why it's important,
+4:38
+as well as some of the basic building blocks of observability like traces
+4:41
+and spans, and how those traces in spans are collected.
+4:45
+In the next notebook, you'll implement some of the instrumentation techniques
+4:48
+that you saw in these slides,
+4:50
+and you'll set up your first Phoenix instance here to collect those traces.
