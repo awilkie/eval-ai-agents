@@ -1,0 +1,48 @@
+[1] AgentRun (AGENT) [Status: ERROR] [EVAL FAILED: unclear] - Reason: The technical 'NaN' is not a clear, user-friendly answer for the requested product SKU.
+        └── Evaluation Type: Response Clarity & Helpfulness
+└── [2] router_call (CHAIN) [Status: ERROR]
+    └── [3] router_llm (LLM) [Status: ERROR]
+[4] AgentRun (AGENT) [Status: ERROR] [EVAL FAILED: unclear] - Reason: A technical 'NaN' was given, not the requested numerical answer or a clear reason.
+        └── Evaluation Type: Response Clarity & Helpfulness
+└── [5] router_call (CHAIN) [Status: ERROR]
+    └── [6] router_llm (LLM) [Status: ERROR]
+[7] AgentRun (AGENT) [Status: ERROR] [EVAL FAILED: unclear] - Reason: The 'NaN' answer failed to provide specific sales data or identify the highest-selling store.
+        └── Evaluation Type: Response Clarity & Helpfulness
+└── [8] router_call (CHAIN) [Status: ERROR]
+    └── [9] router_llm (LLM) [Status: ERROR]
+[10] AgentRun (AGENT) [Status: ERROR] [EVAL FAILED: unclear] - Reason: The output was 'NaN', providing no relevant chart, data, or instructions.
+        └── Evaluation Type: Response Clarity & Helpfulness
+└── [11] router_call (CHAIN) [Status: ERROR]
+    └── [12] router_llm (LLM) [Status: ERROR]
+[13] AgentRun (AGENT) [Status: ERROR] [EVAL FAILED: unclear] - Reason: The answer 'NaN' for a numerical percentage was unclear and lacked necessary explanation.
+        └── Evaluation Type: Response Clarity & Helpfulness
+└── [14] router_call (CHAIN) [Status: ERROR]
+    └── [15] router_llm (LLM) [Status: ERROR]
+[16] AgentRun (AGENT) [Status: ERROR] [EVAL FAILED: unclear] - Reason: The 'NaN' response is vague, providing no human-readable explanation for the missing average.
+        └── Evaluation Type: Response Clarity & Helpfulness
+└── [17] router_call (CHAIN) [Status: ERROR]
+    └── [18] router_llm (LLM) [Status: ERROR]
+[19] AgentRun (AGENT) [Status: OK] [EVAL PASSED: clear]
+        └── Evaluation Type: Response Clarity & Helpfulness
+└── [20] router_call (CHAIN) [Status: OK]
+    └── [21] router_llm (LLM) [Status: OK]
+[22] AgentRun (AGENT) [Status: OK] [EVAL FAILED: unclear] - Reason: The vague answer "None" fails to provide a specific numerical value or an explanation.
+        └── Evaluation Type: Response Clarity & Helpfulness
+└── [23] router_call (CHAIN) [Status: OK]
+    └── [24] router_llm (LLM) [Status: OK]
+[25] AgentRun (AGENT) [Status: OK] [EVAL FAILED: unclear] - Reason: "None" is too vague; it fails to explain the reason for no single highest-selling store.
+        └── Evaluation Type: Response Clarity & Helpfulness
+└── [26] router_call (CHAIN) [Status: OK]
+    └── [27] router_llm (LLM) [Status: OK]
+[28] AgentRun (AGENT) [Status: OK] [EVAL FAILED: unclear] - Reason: The answer 'None' failed to provide the requested chart or explain its absence.
+        └── Evaluation Type: Response Clarity & Helpfulness
+└── [29] router_call (CHAIN) [Status: OK]
+    └── [30] router_llm (LLM) [Status: OK]
+[31] AgentRun (AGENT) [Status: OK] [EVAL FAILED: unclear] - Reason: Answer 'None' didn't provide the requested percentage directly, requiring user interpretation.
+        └── Evaluation Type: Response Clarity & Helpfulness
+└── [32] router_call (CHAIN) [Status: OK]
+    └── [33] router_llm (LLM) [Status: OK]
+[34] AgentRun (AGENT) [Status: OK] [EVAL FAILED: unclear] - Reason: The answer 'None' is ambiguous, failing to clarify why the metric is absent.
+        └── Evaluation Type: Response Clarity & Helpfulness
+└── [35] router_call (CHAIN) [Status: OK]
+    └── [36] router_llm (LLM) [Status: OK]
