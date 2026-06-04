@@ -8,9 +8,10 @@ import matplotlib.pyplot as plt
 import os
 import sqlite3
 
-# Set Phoenix ports to alternative values to avoid Address in Use errors from stuck processes
-os.environ["PHOENIX_GRPC_PORT"] = "4325"
-os.environ["PHOENIX_PORT"] = "6015"
+import random
+# Set Phoenix ports to random values to avoid Address in Use errors from stuck processes
+os.environ["PHOENIX_GRPC_PORT"] = str(random.randint(4000, 5000))
+os.environ["PHOENIX_PORT"] = str(random.randint(6000, 7000))
 
 from helper import get_gemini_api_key, get_phoenix_endpoint
 
@@ -284,6 +285,35 @@ Step 1: Always use the `lookup_sales_data` tool to retrieve the relevant dataset
 Step 2: Only after receiving the tool's output, use the `analyze_sales_data` tool if insights are requested, or the `generate_visualization` tool if a chart is requested.
 """
 
+def convert_to_openai_format(chat_messages):
+    formatted = []
+    for msg in chat_messages:
+        if isinstance(msg, dict):
+            formatted.append(msg)
+            continue
+        role = getattr(msg, "role", "unknown")
+        for part in getattr(msg, "parts", []):
+            if part.function_call:
+                formatted.append({
+                    "role": role,
+                    "function_call": {
+                        "name": part.function_call.name,
+                        "arguments": str(part.function_call.args)
+                    }
+                })
+            elif hasattr(part, "function_response") and part.function_response:
+                formatted.append({
+                    "role": role,
+                    "name": part.function_response.name,
+                    "content": str(part.function_response.response)
+                })
+            elif part.text:
+                formatted.append({
+                    "role": role,
+                    "content": part.text
+                })
+    return formatted
+
 def run_agent(messages):
     print("Running agent with messages:", messages)
     if isinstance(messages, str):
@@ -329,7 +359,7 @@ def run_agent(messages):
             else:
                 print("No tool calls, returning final response")
                 span.set_output(value=response.text)
-                return response.text
+                return convert_to_openai_format(chat_messages)
 
 def start_main_span(messages):
     print("Starting main span with messages:", messages)

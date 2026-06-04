@@ -7,3 +7,8 @@ __pycache__/
 *.png
 *.pdf
 data/*.parquet
+.pytest_cache/
+convergence_*.csv
+convergence_*.txt
+trace_*.txt
+v*.txt

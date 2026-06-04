@@ -1,4 +1,19 @@
 import pytest
+import sys
+from unittest.mock import patch, MagicMock
+import pandas as pd
+
+# Mock dependencies before importing L7 to prevent network execution on import
+mock_client_patch = patch('phoenix.client.Client')
+mock_client = mock_client_patch.start()
+mock_instance = MagicMock()
+# Mock get_spans_dataframe to return an empty DataFrame with necessary columns to skip evaluation blocks safely
+mock_instance.spans.get_spans_dataframe.return_value = pd.DataFrame(columns=["tool_call", "question", "generated_code"])
+mock_client.return_value = mock_instance
+
+mock_start_patch = patch('utils.start_main_span')
+mock_start_patch.start()
+
 import L7
 
 def test_code_is_runnable_success():
